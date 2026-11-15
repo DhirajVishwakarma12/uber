@@ -38,11 +38,11 @@ userSchema.methods.authToken = async function () {
   });
 };
 
-userSchema.statics.hashpassword = async (password) => {
+userSchema.statics.hashpassword = async function(password) {
   return await bcrypt.hash(password, 10);
 };
 
-userSchema.methods.camparepassword = async (password) => {
+userSchema.methods.camparepassword = async function(password) {
   return await bcrypt.compare(password, this.password);
 };
 

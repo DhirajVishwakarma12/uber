@@ -30,7 +30,7 @@ module.exports.isUserExits = async ({ email }) => {
     throw new Error("Email is required.");
   }
 
-  const user = await userModel.findOne({ email });
+  const user = await userModel.findOne({ email }).select("+password");
 
   return user;
 };
