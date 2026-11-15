@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const userService = require("../services/user.services");
 const userModel = require("../models/user.model");
+const blacklistModel = require("../models/blacklisting.model");
 
 /**
  * @name userRegisterController
@@ -124,4 +125,34 @@ module.exports.userLoginController = async (req, res) => {
       message: "Internal server error.",
     });
   }
+};
+
+/**
+ * @name userProfile
+ * @description fetch user data
+ * @access public
+ */
+
+module.exports.userProfile = async function(req,res) {
+  res.send(req.user)
+}
+
+/**
+ * @name userLogout
+ * @description logout an user
+ * @access public
+ */
+
+module.exports.userLogout = async function (req, res) {
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+
+  if (token) {
+    await blacklistModel.create({ token });
+  }
+
+  res.clearCookie("token");
+
+  return res.status(200).json({
+    message: "User logout successfully.",
+  });
 };

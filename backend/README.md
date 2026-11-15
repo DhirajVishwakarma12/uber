@@ -192,3 +192,93 @@ The token is returned in the JSON body and in the `Token` cookie. This endpoint 
   "message": "Internal server error."
 }
 ```
+
+## User profile
+
+Fetches the authenticated user's details from the JWT token. The route is `GET /profile`, mounted under `/api/auth`.
+
+**Endpoint:** `GET /api/auth/profile`  
+**Authentication:** Required via `token` cookie or `Authorization: Bearer <JWT>` header
+
+### Request
+
+No request body is required.
+
+Example request:
+
+```bash
+curl -X GET http://localhost:5000/api/auth/profile \
+  -H "Cookie: token=JWT_TOKEN"
+```
+
+### Responses
+
+| Status | Meaning |
+| --- | --- |
+| `200 OK` | User profile returned successfully |
+| `400 Bad Request` | Token missing, invalid, or blacklisted |
+
+**200 OK — profile fetched**
+
+```json
+{
+  "_id": "USER_ID",
+  "fullName": {
+    "firstName": "Jane",
+    "lastName": "Doe"
+  },
+  "email": "jane@example.com",
+  "password": "HASHED_PASSWORD",
+  "createdAt": "2026-11-15T00:00:00.000Z",
+  "updatedAt": "2026-11-15T00:00:00.000Z"
+}
+```
+
+**400 Bad Request — unauthorized**
+
+```json
+{
+  "message": "unauthorized user"
+}
+```
+
+## User logout
+
+Logs out the authenticated user by clearing the JWT cookie and blacklisting the active token. The route is `GET /logout`, mounted under `/api/auth`.
+
+**Endpoint:** `GET /api/auth/logout`  
+**Authentication:** Required via `token` cookie or `Authorization: Bearer <JWT>` header
+
+### Request
+
+No request body is required.
+
+Example request:
+
+```bash
+curl -X GET http://localhost:5000/api/auth/logout \
+  -H "Cookie: token=JWT_TOKEN"
+```
+
+### Responses
+
+| Status | Meaning |
+| --- | --- |
+| `200 OK` | User logged out successfully |
+| `400 Bad Request` | Token missing, invalid, or blacklisted |
+
+**200 OK — logged out**
+
+```json
+{
+  "message": "User logout successfully."
+}
+```
+
+**400 Bad Request — unauthorized**
+
+```json
+{
+  "message": "unauthorized user"
+}
+```
